@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Infinite Portal</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: #0d0d20;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  overflow: hidden;
+}
+
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: .8s;
+}
+
+/* BLUR EFFECT */
+.blur {
+  filter: blur(8px) brightness(1.4);
+}
+
+/* COLOR BLOBS */
+.blob {
+  position: absolute;
+  width: 40vmax;
+  height: 40vmax;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.7;
+  animation: move 22s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+.b1 { background:#5865F2; top:-20vmax; left:-20vmax; }
+.b2 { background:#3BA4FF; top:25vmax; right:-25vmax; animation-duration:26s; }
+.b3 { background:#9D53FF; bottom:-18vmax; left:18vmax; animation-duration:30s; }
+
+@keyframes move {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(12vmax,-6vmax) scale(1.2); }
+}
+
+/* LOGO */
+#logo {
+  font-size: 1.9rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+/* INPUT */
+input {
+  width: 260px;
+  padding: 12px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  text-align: center;
+  font-size: 1.1rem;
+  outline: none;
+}
+
+/* PORTAL */
+.portal {
+  width:165px;
+  height:165px;
+  border-radius:50%;
+  background: radial-gradient(circle,#000 40%,#111 60%,#000 80%);
+  box-shadow:0 0 40px 18px rgba(0,0,40,.95);
+  cursor:pointer;
+  position:relative;
+}
+
+.portal::after {
+  content:"";
+  position:absolute;
+  inset:-14px;
+  border-radius:50%;
+  border:7px solid rgba(255,255,255,.25);
+  animation:spin 4s linear infinite;
+}
+
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* EXPLANATION */
+#explanation {
+  margin-top: 20px;
+  font-size: .95rem;
+  color: rgba(255,255,255,.85);
+  text-align: center;
+  max-width: 320px;
+}
+
+/* WATERMARK */
+#watermark {
+  position: absolute;
+  bottom:12px;
+  right:12px;
+  font-size:.7rem;
+  opacity:.45;
+}
+</style>
+</head>
+
+<body>
+
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+
+<div id="app">
+  <div id="logo">∞ Infinite Portal</div>
+
+  <input id="siteInput" placeholder="Enter website">
+
+  <div class="portal" id="portal"></div>
+
+  <div id="explanation">
+    Type a website name and tap the portal to instantly travel across the web through Infinite Portal.
+  </div>
+</div>
+
+<div id="watermark">Made by Infinite AK Company</div>
+
+<script>
+let locked = false;
+
+function formatSite(text){
+  text = text.trim().toLowerCase();
+  if(!text.includes(".")) text += ".com";
+  if(!text.startsWith("http")) text = "https://" + text;
+  return text;
+}
+
+document.getElementById("portal").onclick = () => {
+  if (locked) return;  // prevent multiple clicks
+  locked = true;
+
+  const input = document.getElementById("siteInput").value;
+  if (!input) { locked=false; return; }
+
+  // APPLY BLUR ONLY TO #app
+  document.getElementById("app").classList.add("blur");
+
+  setTimeout(() => {
+    window.location.href = formatSite(input);
+  }, 700);
+};
+</script>
+
+</body>
+</html>
